@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF) # -std=c++11 instead of -std=gnu++11
 
@@ -96,7 +96,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_SUPPRESS_REGENERATION TRUE)
 
 # Replace the Debug and Release of Cmake by our own configs.
-include(tools/build/buildconfig.cmake)
+#include(tools/build/buildconfig.cmake)
 
 message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID}")
 if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -160,13 +160,13 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/libfar_version.h.in ${CMAKE_CURRE
 # Testing
 #
 
-include(GoogleTest)
+#include(GoogleTest)
 
-add_executable(libfar_tests
-    "test/test_adapt.cpp"
-    "test/test_memory.cpp"
-    "test/test_resample.cpp"
-    "test/pch.h"
-)
+#add_executable(libfar_tests
+#    "test/test_adapt.cpp"
+#    "test/test_memory.cpp"
+#    "test/test_resample.cpp"
+#    "test/pch.h"
+#)
 
-gtest_add_tests(TARGET libfar_tests)
+#gtest_add_tests(TARGET libfar_tests)

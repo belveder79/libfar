@@ -16,20 +16,40 @@ namespace libfar {
 
 void FAR_FN(cpuid_init)() {
   int cpuinfo[4];
+#if WIN32
   __cpuid(cpuinfo, 0);
+#else
+    asm volatile
+          ("cpuid" : "=a" (cpuinfo[0]), "=b" (cpuinfo[1]), "=c" (cpuinfo[2]), "=d" (cpuinfo[3])
+           : "a" (0), "c" (0));
+#endif
   int numIds = cpuinfo[0];
   int ecx1 = 0, edx1 = 0;
   if (numIds >= 1) {
-    __cpuid(cpuinfo, 1);
+#if WIN32
+  __cpuid(cpuinfo, 1);
+#else
+    asm volatile
+          ("cpuid" : "=a" (cpuinfo[0]), "=b" (cpuinfo[1]), "=c" (cpuinfo[2]), "=d" (cpuinfo[3])
+           : "a" (1), "c" (0));
+#endif
     ecx1 = cpuinfo[2];
     edx1 = cpuinfo[3];
   }
+/*
   int ecx7 = 0, edx7 = 0;
   if (numIds >= 7) {
+#if WIN32
     __cpuid(cpuinfo, 7);
+#else
+    asm volatile
+          ("cpuid" : "=a" (cpuinfo[0]), "=b" (cpuinfo[1]), "=c" (cpuinfo[2]), "=d" (cpuinfo[3])
+           : "a" (7), "c" (0));
+#endif
     ecx7 = cpuinfo[2];
     edx7 = cpuinfo[3];
   }
+*/
   g_hasSSE = (edx1 & 0x02000000) ? far_true : far_false;
   g_hasSSE2 = (edx1 & 0x04000000) ? far_true : far_false;
   g_hasSSE3 = (ecx1 & 0x00000001) ? far_true : far_false;

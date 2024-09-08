@@ -14,7 +14,9 @@
 #ifdef __clang__
 #include <stdalign.h>
 // Should be defined in assert.h in C11, but clang-cl is missing it
+#ifndef static_assert
 #define static_assert(b, m) _Static_assert(b, m)
+#endif
 #endif  // _MSC_VER
 #endif  // __cplusplus
 #endif  // !defined(FAR_NO_STD_INCLUDES)
@@ -100,10 +102,26 @@ typedef struct __declspec(align(64)) float512 {
 } float512;
 static_assert(sizeof(float512) == 64, "");
 #else   // _MSC_VER
+#ifdef __clang__
+typedef char __attribute__((aligned(4))) byte4;
+typedef char __attribute__((aligned(8))) byte8;
+typedef char __attribute__((aligned(16))) byte16;
+typedef char __attribute__((aligned(32))) byte32;
+typedef char __attribute__((aligned(64))) byte64;
+typedef char __attribute__((aligned(16))) short128;
+typedef char __attribute__((aligned(32))) short256;
+typedef char __attribute__((aligned(64))) short512;
+typedef char __attribute__((aligned(16))) float128;
+typedef char __attribute__((aligned(32))) float256;
+typedef char __attribute__((aligned(64))) float512;
+#else
 typedef char __attribute__((align(4))) byte4;
-typedef char __attribute__((align(8))) byte4;
-typedef char __attribute__((align(16)) byte16;
-typedef char __attribute__((align(32)) byte32;
+typedef char __attribute__((align(8))) byte8;
+typedef char __attribute__((align(16))) byte16;
+typedef char __attribute__((align(32))) byte32;
+typedef char __attribute__((align(64))) byte64;
+typedef char __attribute__((align(128))) byte128;
+#endif
 #endif  // _MSC_VER
 
 // Aligned allocations for SIMD
